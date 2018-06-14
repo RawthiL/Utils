@@ -53,12 +53,16 @@ def remote_exec(prog_list, inputs_str, working_directory, server_USER, server_IP
     
     
     # Execute on server
+    #prog_list.insert(0,'ServerAliveInterval=10')
+    #prog_list.insert(0,'-o')
     if server_KEY != '':
         prog_list.insert(0,server_KEY)
         prog_list.insert(0,"-i")
     prog_list.insert(0,server_PORT)
     prog_list.insert(0,"-p")
     prog_list.insert(0,server_USER+"@"+server_IP)
+    if inputs_str != '':
+        prog_list.insert(0,"-tt")
     prog_list.insert(0,"/usr/bin/ssh")
     
     #prog_list.append("-o")
