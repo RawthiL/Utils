@@ -65,18 +65,43 @@ def remote_exec(prog_list, inputs_str, working_directory, server_USER, server_IP
         prog_list.insert(0,"-tt")
     prog_list.insert(0,"/usr/bin/ssh")
     
+    
     #prog_list.append("-o")
     #prog_list.append("ServerAliveInterval 60")
+
     
-    
-    output_log = exec_and_print(prog_list, inputs_str, working_directory, print_flag)
+    if inputs_str == '':
+        output_log = exec_and_print(prog_list, inputs_str, working_directory, print_flag)
+    else:
+        output_log = exec_and_print_2(prog_list, inputs_str, working_directory, print_flag)
     
     return output_log
 
 
+def exec_and_print_2(prog_list, inputs_str, working_directory, print_flag):
+    
+    output_log = list()   
+
+    output_log = execute_program_2(prog_list,inputs_str, working_directory)
+    if print_flag:
+        print(output_log)
+
+        
+    return output_log
+
+
+
+def execute_program_2(prog_list, inputs_str, working_directory):
+    
+    launched_process = subprocess.Popen(prog_list, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+    
+    output, error = launched_process.communicate(inputs_str)
+
+    return output
+
 def exec_and_print(prog_list, inputs_str, working_directory, print_flag):
     
-    output_log = list()
+    output_log = list()   
     
     if print_flag:
         for output_line in execute_program(prog_list,inputs_str, working_directory):
@@ -85,8 +110,11 @@ def exec_and_print(prog_list, inputs_str, working_directory, print_flag):
     else:
         for output_line in execute_program(prog_list,inputs_str, working_directory):
             output_log.append(output_line)
+
         
     return output_log
+
+
 
 def execute_program(prog_list, inputs_str, working_directory):
     
@@ -105,6 +133,7 @@ def execute_program(prog_list, inputs_str, working_directory):
     # Read output as it appears
     for stdout_line in iter(launched_process.stdout.readline, ""):
         yield stdout_line 
+        
     launched_process.stdout.close()
     
     error_code =launched_process.stderr.readline()
