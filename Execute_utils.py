@@ -15,7 +15,17 @@ import sys
 import uuid
 
 
+DRY_RUN = False
 
+def set_dryRUN():
+    DRY_RUN = True
+    print("WARNING!!! DRY RUN ACTIVE - No command will be executed.")
+    return
+    
+def reset_dryRUN():
+    DRY_RUN = False
+    print("DRY RUN Deactivated")
+    return
 
 #-----------------------------------------------------------------------------#
 #--------------- Exexution Functions -----------------------------------------#
@@ -23,7 +33,8 @@ import uuid
 
 def remote_copy(file_flow, working_directory, server_USER, server_IP, server_PORT, file_server_PATH, file_local_PATH, server_KEY='', print_flag = False, compress_flag = False):
     
-    
+    if DRY_RUN:
+        return list()
     
     if compress_flag:
         # Get names
@@ -184,7 +195,7 @@ def remote_exec(prog_list, inputs_str, working_directory, server_USER, server_IP
 
 
 def exec_and_print_2(prog_list, inputs_str, working_directory, print_flag):
-    
+       
     output_log = list()   
 
     output_log = execute_program_2(prog_list,inputs_str, working_directory)
@@ -197,6 +208,9 @@ def exec_and_print_2(prog_list, inputs_str, working_directory, print_flag):
 
 
 def execute_program_2(prog_list, inputs_str, working_directory):
+    
+    if DRY_RUN:
+        return list()
     
     if(working_directory != '.'):
         origWD = os.getcwd() # remember our original working directory
@@ -213,6 +227,9 @@ def execute_program_2(prog_list, inputs_str, working_directory):
 
 
 def exec_and_print_1(prog_list, inputs_str, working_directory, print_flag):
+    
+    if DRY_RUN:
+        return list()
     
     output_log = list() 
     
@@ -243,6 +260,9 @@ def exec_and_print(prog_list, inputs_str, working_directory, print_flag):
 
 
 def execute_program(prog_list, inputs_str, working_directory):
+    
+    if DRY_RUN:
+        return list()
     
     # Launch process
     launched_process = subprocess.Popen(prog_list, 
